@@ -1,0 +1,19 @@
+rails_root = "/sites/today"
+
+ENV["BUNDLE_GEMFILE"] = "#{rails_root}/Gemfile"
+
+Bluepill.application("today") do |app|
+  app.working_dir = rails_root
+
+  app.process("rails") do |process|
+
+    process.start_command = "bundle exec thin start -d"
+    process.pid_file = "#{rails_root}/tmp/pids/thin.pid"
+    process.stop_command = "bundle exec thin stop"
+
+    process.stdout = process.stderr = "#{rails_root}/log/pill.log"
+    process.start_grace_time = 10.seconds
+    #process.stop_grace_time = 5.seconds
+    #process.restart_grace_time = 10.seconds
+  end
+end

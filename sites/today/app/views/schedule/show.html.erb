@@ -1,0 +1,71 @@
+<%= content_for :navigation do %>
+  <li>
+    <%= previous_link @schedule.previous %>
+  </li>
+  <li>
+    <a href="#" class="schedule-current"><%= nav_date_format(@schedule.publish_date) %></a>
+    <input type="date" class="schedule-datepicker" style="display: none;" value="<%= @schedule.publish_date %>" data-original="<%= @schedule.publish_date %>" />
+  </li>
+
+  <li>
+    <%= next_link @schedule.next %>
+  </li>
+<% end %>
+
+<div class="content-live">
+  <%= @schedule.body %>
+</div>
+
+<% if @schedule.can_edit? %>
+  <div class="content-edit" style="display: none;">
+    <%= render partial: 'outlines/form', locals: { outline: @schedule.current } %>
+    <br/>
+  </div>
+<% end %>
+
+<script>
+
+  $(function() {
+    $(".toggle-content-edit").on("click",function(event) {
+      event.preventDefault();
+      $(".content-live").toggle();
+      $(".content-edit").toggle();
+    });
+
+    $(".schedule-current").on("mouseover",function(event) {
+      event.preventDefault();
+      $(this).toggle();
+      $(".schedule-datepicker").toggle();
+    });
+
+    $(".schedule-datepicker").on("focusout",function(event) {
+      event.preventDefault();
+
+      var newDate = $(this).val().replace(/-/g,'');
+      var originalDate = $(this).data("original").replace(/-/g,'');
+
+      if (newDate !== originalDate) {
+        window.location.href= "/" + newDate;
+      }
+
+    });
+
+  });
+
+</script>
+
+<%= content_for :footer do %>
+
+  <% if current_user.admin? %>
+    <%= render partial: "schedule/admin_controls" %>
+  <% end %>
+
+  <li>
+    <%= link_to "calendar", outlines_path %>
+  </li>
+
+  <li>
+    <%= link_to "search", search_path %>
+  </li>
+
+<% end %>

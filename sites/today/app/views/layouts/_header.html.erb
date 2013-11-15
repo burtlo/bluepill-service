@@ -1,0 +1,15 @@
+<div class="wrapper">
+  <div id="header">
+    <div id="logo">
+      <%= link_to image_tag("logo-bw.png", alt: "Jumpstart Lab"), root_path %>
+    </div>
+    <ul id="nav">
+      <%= yield :navigation %>
+    </ul>
+  </div>
+  <div id="notifications">
+    <% flash.each do |message| %>
+      <%= message.last %>
+    <% end %>
+  </div>
+</div>
